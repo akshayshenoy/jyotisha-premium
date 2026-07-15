@@ -1,6 +1,7 @@
 {
   "name": "jyotisha-premium",
   "version": "2.0.0",
+  "type": "module"
   "description": "Jyotisha Premium — AI Astrology by Akshay Shenoy",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.0"
