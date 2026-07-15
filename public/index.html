@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Jyotisha Premium — AI-powered Vedic & Western astrology. Birth chart, horoscope, love, career, health readings in 5 languages."/>
+<meta property="og:title" content="Jyotisha — Your Cosmic Blueprint"/>
+<meta property="og:description" content="AI astrology readings — past life, present, future, love & career in English, Kannada, Hindi, Telugu & Tamil"/>
+<title>Jyotisha ✦ Premium AI Astrology</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS & RESET
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --gold:    #c9a84c;
+  --gold2:   #f0d898;
+  --gold3:   #7a5c1e;
+  --violet:  #6b4fa0;
+  --violet2: #9b7dd4;
+  --violet3: #2a1f50;
+  --teal:    #3d8f8f;
+  --rose:    #c4637a;
+  --paper:   #f7f4ef;
+  --ink:     #07050f;
+  --glass:   rgba(247,244,239,0.055);
+  --glass2:  rgba(247,244,239,0.09);
+  --border:  rgba(247,244,239,0.10);
+  --border2: rgba(201,168,76,0.25);
+  --serif:   'Cormorant Garamond', Georgia, serif;
+  --sans:    'DM Sans', system-ui, sans-serif;
+  --r-sm:    10px;
+  --r-md:    14px;
+  --r-lg:    20px;
+  --r-xl:    26px;
+}
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: var(--sans); background: var(--ink); color: var(--paper); overflow-x: hidden; min-height: 100vh; }
+img, canvas, svg { display: block; }
+button { cursor: pointer; font-family: var(--sans); }
+input, select { font-family: var(--sans); }
+a { color: var(--gold); text-decoration: none; }
+::selection { background: var(--violet); color: var(--paper); }
+
+/* ═══════════════════════════════════════════
+   CANVAS SKY
+═══════════════════════════════════════════ */
+#skyCanvas {
+  position: fixed; inset: 0; z-index: 0;
+  background: radial-gradient(ellipse at 20% 5%, #1e0e42 0%, #0c0820 45%, #04020c 100%);
+}
+.nebula1 { position:fixed;z-index:0;pointer-events:none;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(107,79,160,0.14) 0%,transparent 70%);top:-200px;left:-100px; }
+.nebula2 { position:fixed;z-index:0;pointer-events:none;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(61,143,143,0.09) 0%,transparent 70%);bottom:-100px;right:-100px; }
+
+/* ═══════════════════════════════════════════
+   PAGE WRAPPER
+═══════════════════════════════════════════ */
+.page { position: relative; z-index: 1; }
+
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 32px;
+  background: rgba(7,5,15,0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(247,244,239,0.06);
+}
+.nav-logo {
+  font-family: var(--serif); font-size: 24px; letter-spacing: 1.5px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 60%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.nav-logo span { font-family:var(--sans); font-size:11px; opacity:0.45; margin-left:8px; vertical-align:middle; -webkit-text-fill-color:rgba(247,244,239,0.45); }
+.nav-right { display:flex; gap:12px; align-items:center; }
+.nav-tag { font-size:11px; color:rgba(247,244,239,0.35); letter-spacing:1px; text-transform:uppercase; }
+.nav-badge { font-size:10px; background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3); color:var(--gold2); border-radius:20px; padding:3px 10px; letter-spacing:0.5px; }
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero {
+  text-align: center;
+  padding: 100px 24px 70px;
+  max-width: 780px; margin: 0 auto;
+}
+.hero-eyebrow {
+  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 24px;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+}
+.hero-eyebrow::before, .hero-eyebrow::after { content:''; width:50px; height:1px; background:linear-gradient(90deg,transparent,var(--gold)); opacity:0.4; }
+.hero-eyebrow::after { transform:scaleX(-1); }
+.hero-h1 {
+  font-family: var(--serif);
+  font-size: clamp(52px, 10vw, 96px);
+  font-weight: 300; line-height: 0.95;
+  letter-spacing: -2px; margin-bottom: 22px;
+}
+.hero-h1 em { font-style:italic; background:linear-gradient(135deg,var(--gold2),var(--violet2),var(--gold2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.hero-sub { font-size:16px; color:rgba(247,244,239,0.5); line-height:1.75; max-width:500px; margin:0 auto 50px; }
+
+/* ═══════════════════════════════════════════
+   ZODIAC WHEEL
+═══════════════════════════════════════════ */
+.zodiac-wheel-wrap { display:flex; justify-content:center; margin-bottom:60px; }
+#zodiacWheel { cursor:pointer; }
+
+/* ═══════════════════════════════════════════
+   FEATURE PILLS
+═══════════════════════════════════════════ */
+.features-row {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+  max-width: 680px; margin: 0 auto 70px; padding: 0 20px;
+}
+.feat-pill {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px; letter-spacing: 0.3px;
+  background: var(--glass); border: 1px solid var(--border);
+  border-radius: 30px; padding: 8px 16px; color: rgba(247,244,239,0.65);
+  backdrop-filter: blur(8px);
+}
+.feat-pill span { font-size:14px; }
+
+/* ═══════════════════════════════════════════
+   FORM SECTION
+═══════════════════════════════════════════ */
+.form-section { max-width:660px; margin:0 auto; padding:0 20px 80px; }
+.glass-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 40px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 16px 64px rgba(0,0,0,0.4), inset 0 1px 0 rgba(247,244,239,0.07);
+}
+.sec-label {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.sec-label::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(201,168,76,0.3),transparent); }
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:16px; }
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px; }
+.g1 { margin-bottom:16px; }
+.field { display:flex; flex-direction:column; gap:6px; }
+.field label { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(247,244,239,0.38); }
+.field select, .field input {
+  font-family:var(--sans); font-size:14px;
+  background: rgba(247,244,239,0.06);
+  border: 1px solid rgba(247,244,239,0.12);
+  border-radius: var(--r-md); padding:13px 16px; color:var(--paper);
+  outline: none; width: 100%;
+  transition: border-color .2s, background .2s, box-shadow .2s;
+  -webkit-appearance: none; appearance: none;
+}
+.field select:focus, .field input:focus {
+  border-color: rgba(201,168,76,0.5);
+  background: rgba(247,244,239,0.09);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+}
+.field select option { background:#130e28; }
+.field input::placeholder { color:rgba(247,244,239,0.2); }
+.field-hint { font-size:11px; color:rgba(247,244,239,0.28); margin-top:4px; }
+.divider { height:1px; background:linear-gradient(90deg,transparent,rgba(247,244,239,0.08),transparent); margin:28px 0; }
+
+/* Lang pills */
+.lang-row { display:flex; gap:8px; flex-wrap:wrap; }
+.lp {
+  font-size:12px; padding:7px 16px;
+  background:transparent; border:1px solid rgba(247,244,239,0.14);
+  border-radius:30px; color:rgba(247,244,239,0.4);
+  transition:all .2s;
+}
+.lp:hover { border-color:rgba(201,168,76,0.4); color:var(--gold2); background:rgba(201,168,76,0.07); }
+.lp.on { background:rgba(201,168,76,0.14); border-color:rgba(201,168,76,0.45); color:var(--gold2); font-weight:500; }
+
+/* Submit */
+.submit-btn {
+  width:100%; margin-top:28px;
+  background: linear-gradient(135deg, var(--violet) 0%, #8060c0 50%, var(--violet2) 100%);
+  background-size:200% 100%;
+  color:var(--paper); border:none; border-radius:var(--r-md);
+  padding:18px 28px; font-size:16px; font-weight:500; letter-spacing:0.3px;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  transition:all .25s; position:relative; overflow:hidden;
+  box-shadow: 0 8px 32px rgba(107,79,160,0.35);
+}
+.submit-btn::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,transparent 0%,rgba(255,255,255,0.06) 50%,transparent 100%); opacity:0; transition:opacity .2s; }
+.submit-btn:hover { transform:translateY(-2px); box-shadow:0 12px 40px rgba(107,79,160,0.5); background-position:100% 0; }
+.submit-btn:hover::after { opacity:1; }
+.submit-btn:active { transform:translateY(0); }
+.submit-btn:disabled { opacity:0.35; cursor:not-allowed; transform:none; box-shadow:none; }
+
+/* ═══════════════════════════════════════════
+   RESULT SECTION
+═══════════════════════════════════════════ */
+.result-section { max-width:820px; margin:0 auto; padding:0 20px 100px; display:none; }
+
+/* Chart header */
+.chart-header {
+  display:flex; align-items:flex-start; gap:24px;
+  background: linear-gradient(135deg,rgba(107,79,160,0.2) 0%,rgba(61,143,143,0.12) 100%);
+  border: 1px solid rgba(107,79,160,0.3);
+  border-radius: var(--r-xl); padding:30px; margin-bottom:20px;
+  position:relative; overflow:hidden;
+}
+.chart-header::before { content:''; position:absolute; top:-50%;right:-10%;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.08),transparent 70%); }
+.sign-orb {
+  width:82px; height:82px; flex-shrink:0;
+  background: linear-gradient(135deg,var(--violet) 0%,var(--violet2) 100%);
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:36px; box-shadow:0 8px 32px rgba(107,79,160,0.5);
+  position:relative; z-index:1;
+}
+.sign-name-big { font-family:var(--serif); font-size:28px; font-weight:400; letter-spacing:-0.3px; margin-bottom:5px; }
+.sign-sub { font-size:13px; color:rgba(247,244,239,0.5); margin-bottom:14px; }
+.traits-row { display:flex; gap:7px; flex-wrap:wrap; }
+.trait { font-size:11px; background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.22); border-radius:20px; padding:4px 12px; color:var(--gold2); letter-spacing:0.3px; }
+
+/* Lucky card */
+.lucky-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-bottom:20px; }
+.lucky-cell {
+  background:var(--glass); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:14px 12px; text-align:center;
+  transition:all .2s;
+}
+.lucky-cell:hover { background:var(--glass2); transform:translateY(-2px); }
+.lucky-cell .lc-icon { font-size:22px; margin-bottom:7px; }
+.lucky-cell .lc-lbl { font-size:9px; text-transform:uppercase; letter-spacing:1.2px; color:rgba(247,244,239,0.35); margin-bottom:3px; }
+.lucky-cell .lc-val { font-size:13px; font-weight:500; color:var(--gold2); }
+
+/* Planets row */
+.planets-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:10px; margin-bottom:20px; }
+.planet-cell {
+  background:var(--glass); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:14px 8px; text-align:center;
+  transition:all .2s; cursor:default;
+}
+.planet-cell:hover { background:var(--glass2); transform:translateY(-2px); }
+.pc-sym { font-size:20px; display:block; margin-bottom:5px; }
+.pc-name { font-size:9px; color:rgba(247,244,239,0.38); letter-spacing:0.8px; text-transform:uppercase; }
+.pc-sign { font-size:12px; font-weight:500; color:var(--gold2); margin-top:3px; }
+
+/* Element bars */
+.elem-bars { background:var(--glass); border:1px solid var(--border); border-radius:var(--r-md); padding:20px; margin-bottom:20px; }
+.elem-row { margin-bottom:12px; }
+.elem-row:last-child { margin-bottom:0; }
+.elem-top { display:flex; justify-content:space-between; font-size:12px; color:rgba(247,244,239,0.45); margin-bottom:5px; }
+.elem-track { height:4px; background:rgba(247,244,239,0.08); border-radius:2px; }
+.elem-fill { height:4px; border-radius:2px; transition:width 1.2s cubic-bezier(.4,0,.2,1); }
+.elem-fill.fire  { background:linear-gradient(90deg,#e85d3a,#f0a060); }
+.elem-fill.earth { background:linear-gradient(90deg,#4a8c5c,#a0c878); }
+.elem-fill.water { background:linear-gradient(90deg,#3a6ea8,#78b4d8); }
+.elem-fill.air   { background:linear-gradient(90deg,#8c7ad4,var(--violet2)); }
+
+/* Tabs */
+.tabs-wrap { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px; }
+.tab-btn {
+  padding:9px 16px; font-size:12px; letter-spacing:0.3px;
+  background:var(--glass); border:1px solid var(--border);
+  border-radius:30px; color:rgba(247,244,239,0.45);
+  transition:all .2s;
+}
+.tab-btn:hover { background:var(--glass2); color:var(--paper); border-color:rgba(247,244,239,0.2); }
+.tab-btn.on {
+  background:linear-gradient(135deg,var(--violet),var(--violet2));
+  border-color:transparent; color:var(--paper); font-weight:500;
+  box-shadow:0 4px 16px rgba(107,79,160,0.4);
+}
+
+/* Tab group headings */
+.tab-group-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:rgba(247,244,239,0.25); padding:4px 8px; }
+
+/* Reading card */
+.reading-card {
+  background:var(--glass); border:1px solid var(--border);
+  border-radius:var(--r-xl); padding:32px; margin-bottom:16px;
+  backdrop-filter:blur(12px);
+}
+.r-label {
+  font-size:10px; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--gold); margin-bottom:20px;
+  display:flex; align-items:center; gap:12px;
+}
+.r-label::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(201,168,76,0.25),transparent); }
+.r-text { font-family:var(--serif); font-size:19px; font-weight:300; color:rgba(247,244,239,0.88); line-height:1.9; }
+.r-text p { margin-bottom:18px; }
+.r-text p:last-child { margin-bottom:0; }
+
+/* Loading */
+.loading-state { text-align:center; padding:60px 20px; }
+.cosmos-loader { position:relative; width:60px; height:60px; margin:0 auto 20px; }
+.cosmos-loader .ring {
+  position:absolute; border-radius:50%;
+  border:2px solid transparent;
+  animation:spin 1.2s linear infinite;
+}
+.cosmos-loader .ring:nth-child(1) { inset:0; border-top-color:var(--gold); }
+.cosmos-loader .ring:nth-child(2) { inset:8px; border-right-color:var(--violet2); animation-duration:0.8s; animation-direction:reverse; }
+.cosmos-loader .ring:nth-child(3) { inset:18px; border-bottom-color:var(--teal); animation-duration:1.5s; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.load-text { font-family:var(--serif); font-size:20px; font-style:italic; color:rgba(247,244,239,0.4); }
+
+/* Error */
+.err-box { background:rgba(196,99,122,0.1); border:1px solid rgba(196,99,122,0.25); border-radius:var(--r-md); padding:20px; color:#e8a0b0; font-size:14px; line-height:1.7; }
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer {
+  position:relative; z-index:1; text-align:center;
+  padding:50px 20px 60px;
+  border-top:1px solid rgba(247,244,239,0.05);
+}
+.footer-logo { font-family:var(--serif); font-size:26px; background:linear-gradient(135deg,var(--gold),var(--gold2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:10px; }
+.footer-by { font-size:12px; color:rgba(247,244,239,0.3); margin-bottom:12px; }
+.footer-by strong { color:var(--gold); font-weight:500; }
+.footer-note { font-size:11px; color:rgba(247,244,239,0.18); line-height:1.8; max-width:460px; margin:0 auto; }
+.footer-links { display:flex; gap:16px; justify-content:center; margin-top:16px; }
+.footer-links a { font-size:11px; color:rgba(247,244,239,0.25); letter-spacing:0.5px; }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .g3 { grid-template-columns:1fr 1fr; }
+  .g2 { grid-template-columns:1fr; }
+  .glass-card, .reading-card { padding:22px 18px; }
+  .chart-header { flex-direction:column; align-items:center; text-align:center; }
+  .nav { padding:14px 18px; }
+  .nav-tag { display:none; }
+  .hero-h1 { font-size:clamp(40px,12vw,60px); }
+  .planets-row { grid-template-columns:repeat(4,1fr); }
+  .lucky-grid { grid-template-columns:repeat(3,1fr); }
+}
+@media (max-width:380px) {
+  .planets-row { grid-template-columns:repeat(3,1fr); }
+  .lucky-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media (prefers-reduced-motion:reduce) {
+  *, .ring, .cosmos-loader { animation:none!important; transition:none!important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Sky -->
+<canvas id="skyCanvas"></canvas>
+<div class="nebula1"></div>
+<div class="nebula2"></div>
+
+<div class="page">
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav-logo">Jyotisha <span>· ಜ್ಯೋತಿಷ</span></div>
+  <div class="nav-right">
+    <div class="nav-tag">Vedic · Western · AI</div>
+    <div class="nav-badge">✦ Premium</div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-eyebrow">Vedic · Western · AI-Powered · 5 Languages</div>
+  <h1 class="hero-h1">Your <em>cosmic</em><br>blueprint</h1>
+  <p class="hero-sub">Enter your birth details to unlock personalised AI readings — past karma, present, future, love, career, health &amp; more.</p>
+</div>
+
+<!-- ── ZODIAC WHEEL ── -->
+<div class="zodiac-wheel-wrap">
+  <canvas id="zodiacWheel" width="320" height="320" title="Zodiac Wheel — click to spin"></canvas>
+</div>
+
+<!-- ── FEATURE PILLS ── -->
+<div class="features-row">
+  <div class="feat-pill"><span>🌙</span> Birth Chart</div>
+  <div class="feat-pill"><span>🔮</span> Past Life & Karma</div>
+  <div class="feat-pill"><span>❤️</span> Love & Marriage</div>
+  <div class="feat-pill"><span>💼</span> Career & Finance</div>
+  <div class="feat-pill"><span>🧘</span> Health & Wellness</div>
+  <div class="feat-pill"><span>📅</span> Daily Horoscope</div>
+  <div class="feat-pill"><span>🗓️</span> Weekly · Monthly · Yearly</div>
+  <div class="feat-pill"><span>💎</span> Gemstone & Rudraksha</div>
+  <div class="feat-pill"><span>🌍</span> 5 Languages</div>
+  <div class="feat-pill"><span>🪐</span> Nakshatra · Dasha</div>
+</div>
+
+<!-- ── FORM ── -->
+<div class="form-section">
+  <div class="glass-card">
+
+    <div class="sec-label">Birth details</div>
+    <div class="g3">
+      <div class="field"><label>Day</label><select id="fDay"></select></div>
+      <div class="field">
+        <label>Month</label>
+        <select id="fMonth">
+          <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+          <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+          <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+          <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+        </select>
+      </div>
+      <div class="field"><label>Year</label><select id="fYear"></select></div>
+    </div>
+    <div class="g2">
+      <div class="field">
+        <label>Birth time</label>
+        <input type="time" id="fTime" value="06:00"/>
+        <div class="field-hint">More accurate with correct time</div>
+      </div>
+      <div class="field"><label>Your name</label><input type="text" id="fName" placeholder="e.g. Priya, Arjun" maxlength="50"/></div>
+    </div>
+    <div class="g2">
+      <div class="field">
+        <label>Birth city / place</label>
+        <input type="text" id="fPlace" placeholder="e.g. Bengaluru, Mumbai"/>
+        <div class="field-hint">Used for accurate ascendant</div>
+      </div>
+      <div class="field"><label>Gender</label>
+        <select id="fGender">
+          <option value="they">Prefer not to say</option>
+          <option value="she">Female (She/Her)</option>
+          <option value="he">Male (He/Him)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec-label">Reading language</div>
+    <div class="lang-row">
+      <button class="lp on" onclick="setLang('en',this)">English</button>
+      <button class="lp" onclick="setLang('kn',this)">ಕನ್ನಡ</button>
+      <button class="lp" onclick="setLang('hi',this)">हिंदी</button>
+      <button class="lp" onclick="setLang('te',this)">తెలుగు</button>
+      <button class="lp" onclick="setLang('ta',this)">தமிழ்</button>
+    </div>
+
+    <button class="submit-btn" id="goBtn" onclick="generateChart()">
+      <span style="font-size:18px">🔮</span> Generate my birth chart
+    </button>
+  </div>
+</div>
+
+<!-- ── RESULT ── -->
+<div class="result-section" id="resultSection">
+
+  <!-- Chart header -->
+  <div id="chartHeader"></div>
+
+  <!-- Lucky info -->
+  <div id="luckyGrid"></div>
+
+  <!-- Planets -->
+  <div id="planetsRow"></div>
+
+  <!-- Elements -->
+  <div id="elemBars"></div>
+
+  <!-- Tabs -->
+  <div class="tabs-wrap" id="tabsWrap"></div>
+
+  <!-- Reading content -->
+  <div id="readingContent"></div>
+
+</div>
+
+</div><!-- /page -->
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">✦ Jyotisha</div>
+  <div class="footer-by">Created &amp; authorised by <strong>Akshay Shenoy</strong></div>
+  <div class="footer-note">AI-powered readings blending Vedic &amp; Western astrology traditions.<br>For self-reflection and guidance only. Not a substitute for professional advice.</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+<!-- Astrology Engine -->
+<script src="js/astro-engine.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════
+   STAR CANVAS
+═══════════════════════════════════════════ */
+(function() {
+  const canvas = document.getElementById('skyCanvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, stars = [], meteors = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  function initStars() {
+    stars = Array.from({ length: 280 }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.4 + 0.2,
+      a: Math.random(), s: (Math.random() * 0.004 + 0.001) * (Math.random() < 0.5 ? 1 : -1),
+      gold: Math.random() < 0.05,
+    }));
+  }
+  function spawnMeteor() {
+    if (meteors.length < 2 && Math.random() < 0.003) {
+      meteors.push({ x: Math.random() * W * 0.7, y: Math.random() * H * 0.3, len: 120 + Math.random() * 80, a: 1, speed: 8 + Math.random() * 6 });
+    }
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    stars.forEach(s => {
+      s.a += s.s;
+      if (s.a > 1 || s.a < 0) s.s = -s.s;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = s.gold ? `rgba(201,168,76,${s.a * 0.75})` : `rgba(247,244,239,${s.a * 0.8})`;
+      ctx.fill();
+    });
+    spawnMeteor();
+    meteors = meteors.filter(m => m.a > 0);
+    meteors.forEach(m => {
+      const grad = ctx.createLinearGradient(m.x, m.y, m.x + m.len, m.y + m.len * 0.5);
+      grad.addColorStop(0, `rgba(201,168,76,0)`);
+      grad.addColorStop(0.5, `rgba(247,244,239,${m.a * 0.8})`);
+      grad.addColorStop(1, `rgba(201,168,76,0)`);
+      ctx.beginPath();
+      ctx.moveTo(m.x, m.y);
+      ctx.lineTo(m.x + m.len, m.y + m.len * 0.5);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth   = 1.5;
+      ctx.stroke();
+      m.x += m.speed; m.y += m.speed * 0.5; m.a -= 0.025;
+    });
+    requestAnimationFrame(draw);
+  }
+  resize(); initStars(); draw();
+  window.addEventListener('resize', () => { resize(); initStars(); });
+})();
+
+/* ═══════════════════════════════════════════
+   ZODIAC WHEEL
+═══════════════════════════════════════════ */
+(function() {
+  const canvas = document.getElementById('zodiacWheel');
+  const ctx    = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height, cx = W/2, cy = H/2, R = W/2 - 10;
+  const GLYPHS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+  const COLORS = ['#e85d3a','#4a8c5c','#8c7ad4','#3a6ea8','#e85d3a','#4a8c5c','#8c7ad4','#3a6ea8','#e85d3a','#4a8c5c','#8c7ad4','#3a6ea8'];
+  let rot = 0, targetRot = 0, spinning = false;
+
+  function draw(r) {
+    ctx.clearRect(0,0,W,H);
+    // outer ring
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(r);
+    for (let i=0;i<12;i++) {
+      const a1 = (i/12)*Math.PI*2 - Math.PI/2;
+      const a2 = ((i+1)/12)*Math.PI*2 - Math.PI/2;
+      const am = (a1+a2)/2;
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,R,a1,a2); ctx.closePath();
+      ctx.fillStyle = `${COLORS[i]}18`; ctx.fill();
+      ctx.strokeStyle = 'rgba(201,168,76,0.15)'; ctx.lineWidth=1; ctx.stroke();
+      // glyph
+      const gr = R*0.72;
+      ctx.save(); ctx.translate(Math.cos(am)*gr, Math.sin(am)*gr); ctx.rotate(-r);
+      ctx.font = '16px serif'; ctx.fillStyle = COLORS[i]+'cc'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(GLYPHS[i], 0, 0);
+      ctx.restore();
+    }
+    // inner circles
+    [R*0.55, R*0.35].forEach(cr => {
+      ctx.beginPath(); ctx.arc(0,0,cr,0,Math.PI*2);
+      ctx.strokeStyle='rgba(201,168,76,0.12)'; ctx.lineWidth=1; ctx.stroke();
+    });
+    // spokes
+    for (let i=0;i<12;i++) {
+      const a = (i/12)*Math.PI*2;
+      ctx.beginPath(); ctx.moveTo(Math.cos(a)*R*0.35,Math.sin(a)*R*0.35); ctx.lineTo(Math.cos(a)*R,Math.sin(a)*R);
+      ctx.strokeStyle='rgba(201,168,76,0.1)'; ctx.lineWidth=1; ctx.stroke();
+    }
+    // center dot
+    ctx.beginPath(); ctx.arc(0,0,6,0,Math.PI*2);
+    ctx.fillStyle='rgba(201,168,76,0.5)'; ctx.fill();
+    ctx.restore();
+    // outer border
+    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+    ctx.strokeStyle='rgba(201,168,76,0.2)'; ctx.lineWidth=1.5; ctx.stroke();
+  }
+
+  function animate() {
+    rot += (targetRot - rot) * 0.04;
+    draw(rot);
+    requestAnimationFrame(animate);
+  }
+  canvas.addEventListener('click', () => { targetRot += Math.PI * 2 / 12; });
+  animate();
+  // slow auto-spin
+  setInterval(() => { targetRot += 0.01; }, 50);
+})();
+
+/* ═══════════════════════════════════════════
+   DROPDOWNS
+═══════════════════════════════════════════ */
+const dayEl  = document.getElementById('fDay');
+const yearEl = document.getElementById('fYear');
+for (let d=1; d<=31; d++) { const o=document.createElement('option'); o.value=d; o.textContent=d; dayEl.appendChild(o); }
+const CY = new Date().getFullYear();
+for (let y=CY; y>=1920; y--) { const o=document.createElement('option'); o.value=y; o.textContent=y; yearEl.appendChild(o); }
+yearEl.value = CY - 28;
+
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
+let LANG      = 'en';
+let chartData = null;
+let activeTab = 'past';
+const cache   = {};
+
+function setLang(l, btn) {
+  LANG = l;
+  document.querySelectorAll('.lp').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  Object.keys(cache).forEach(k => delete cache[k]);
+  if (chartData && document.getElementById('readingContent')) loadTab(activeTab);
+}
+
+/* ═══════════════════════════════════════════
+   CITY → LAT/LON (approx)
+═══════════════════════════════════════════ */
+const CITY_DB = {
+  'bengaluru':{ lat:12.97, lon:77.59 },'bangalore':{ lat:12.97, lon:77.59 },
+  'mumbai':{ lat:19.07, lon:72.87 },'delhi':{ lat:28.61, lon:77.21 },
+  'new delhi':{ lat:28.61, lon:77.21 },'chennai':{ lat:13.08, lon:80.27 },
+  'hyderabad':{ lat:17.38, lon:78.48 },'kolkata':{ lat:22.57, lon:88.36 },
+  'pune':{ lat:18.52, lon:73.86 },'ahmedabad':{ lat:23.03, lon:72.58 },
+  'jaipur':{ lat:26.91, lon:75.79 },'lucknow':{ lat:26.85, lon:80.95 },
+  'mysuru':{ lat:12.30, lon:76.65 },'mysore':{ lat:12.30, lon:76.65 },
+  'mangaluru':{ lat:12.87, lon:74.84 },'mangalore':{ lat:12.87, lon:74.84 },
+  'hubli':{ lat:15.36, lon:75.12 },'dharwad':{ lat:15.45, lon:75.01 },
+  'default':{ lat:12.97, lon:77.59 }, // Bengaluru fallback
+};
+function getCoords(place) {
+  if (!place) return CITY_DB.default;
+  const k = place.trim().toLowerCase();
+  for (const [city, coords] of Object.entries(CITY_DB)) { if (k.includes(city)) return coords; }
+  return CITY_DB.default;
+}
+
+/* ═══════════════════════════════════════════
+   GENERATE CHART
+═══════════════════════════════════════════ */
+function generateChart() {
+  const d     = parseInt(dayEl.value);
+  const m     = parseInt(document.getElementById('fMonth').value);
+  const y     = parseInt(yearEl.value);
+  const [h,mi]= (document.getElementById('fTime').value || '06:00').split(':').map(Number);
+  const name  = document.getElementById('fName').value.trim() || 'Seeker';
+  const place = document.getElementById('fPlace').value.trim();
+
+  const { lat, lon } = getCoords(place);
+  const result = AstroEngine.compute({ year:y, month:m, day:d, hour:h, minute:mi, lat, lon });
+  const traits = AstroEngine.TRAITS[result.sunSign.name] || [];
+
+  chartData = {
+    name, age: CY - y, place: place || 'India',
+    sunSign:  result.sunSign.name,
+    moonSign: result.moonSign.name,
+    rising:   result.rising.name,
+    nakshatra: result.nakshatra,
+    planets: {
+      Mercury: result.planets.Mercury.sign.name,
+      Venus:   result.planets.Venus.sign.name,
+      Mars:    result.planets.Mars.sign.name,
+      Jupiter: result.planets.Jupiter.sign.name,
+      Saturn:  result.planets.Saturn.sign.name,
+      Rahu:    result.planets.Rahu.sign.name,
+      Ketu:    result.planets.Ketu.sign.name,
+    },
+    elBalance: result.elBalance,
+    lucky: result.lucky,
+  };
+
+  Object.keys(cache).forEach(k => delete cache[k]);
+
+  // Render shell
+  const sec = document.getElementById('resultSection');
+  sec.style.display = 'block';
+  renderChartHeader(result, name, traits);
+  renderLucky(result.lucky, result.nakshatra);
+  renderPlanets(result.planets);
+  renderElements(result.elBalance);
+  renderTabs();
+  loadTab('past');
+  setTimeout(() => sec.scrollIntoView({ behavior:'smooth', block:'start' }), 120);
+}
+
+/* ── Chart Header ── */
+function renderChartHeader(result, name, traits) {
+  document.getElementById('chartHeader').innerHTML = `
+    <div class="chart-header" style="margin-bottom:20px">
+      <div class="sign-orb">${result.sunSign.glyph}</div>
+      <div>
+        <div class="sign-name-big">${result.sunSign.name} Sun · ${result.moonSign.name} Moon · ${result.rising.name} Rising</div>
+        <div class="sign-sub">${result.sunSign.el} · Ruled by ${result.sunSign.ruler} · Nakshatra: ${result.nakshatra} · Age ${CY - parseInt(document.getElementById('fYear').value)}</div>
+        <div class="traits-row">${traits.map(t=>`<span class="trait">${t}</span>`).join('')}
+          <span class="trait" style="background:rgba(107,79,160,0.15);border-color:rgba(107,79,160,0.3);color:var(--violet2)">${result.rising.name} Rising</span>
+          <span class="trait" style="background:rgba(61,143,143,0.12);border-color:rgba(61,143,143,0.3);color:#7ed4d4">${result.moonSign.name} Moon</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── Lucky Grid ── */
+function renderLucky(lucky, nakshatra) {
+  document.getElementById('luckyGrid').innerHTML = `
+    <div class="lucky-grid" style="margin-bottom:20px">
+      <div class="lucky-cell"><div class="lc-icon">💎</div><div class="lc-lbl">Gemstone</div><div class="lc-val">${lucky.gem}</div></div>
+      <div class="lucky-cell"><div class="lc-icon">🎨</div><div class="lc-lbl">Lucky Color</div><div class="lc-val">${lucky.color}</div></div>
+      <div class="lucky-cell"><div class="lc-icon">🔢</div><div class="lc-lbl">Lucky Number</div><div class="lc-val">${lucky.num}</div></div>
+      <div class="lucky-cell"><div class="lc-icon">📅</div><div class="lc-lbl">Lucky Day</div><div class="lc-val">${lucky.day}</div></div>
+      <div class="lucky-cell"><div class="lc-icon">🕉️</div><div class="lc-lbl">Rudraksha</div><div class="lc-val">${lucky.rudraksha}</div></div>
+      <div class="lucky-cell"><div class="lc-icon">⭐</div><div class="lc-lbl">Nakshatra</div><div class="lc-val">${nakshatra}</div></div>
+    </div>`;
+}
+
+/* ── Planets ── */
+const P_SYMS = { Mercury:'☿', Venus:'♀', Mars:'♂', Jupiter:'♃', Saturn:'♄', Rahu:'☊', Ketu:'☋' };
+function renderPlanets(planets) {
+  document.getElementById('planetsRow').innerHTML = `
+    <div class="planets-row" style="margin-bottom:20px">
+      ${Object.entries(planets).map(([p, data]) => `
+        <div class="planet-cell">
+          <span class="pc-sym">${P_SYMS[p] || '●'}</span>
+          <div class="pc-name">${p}</div>
+          <div class="pc-sign">${data.sign.glyph} ${data.sign.name}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ── Elements ── */
+function renderElements(el) {
+  const total = 3;
+  document.getElementById('elemBars').innerHTML = `
+    <div class="elem-bars" style="margin-bottom:20px">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Elemental Balance</div>
+      ${Object.entries(el).map(([name, v]) => `
+        <div class="elem-row">
+          <div class="elem-top"><span>${name}</span><span>${Math.round(v/total*100)}%</span></div>
+          <div class="elem-track"><div class="elem-fill ${name.toLowerCase()}" style="width:${Math.round(v/total*100)}%"></div></div>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════ */
+const TAB_GROUPS = [
+  { label:'Core Readings', tabs:[
+    { id:'past',    icon:'🔮', label:'Past Life' },
+    { id:'present', icon:'🌟', label:'Present' },
+    { id:'future',  icon:'🚀', label:'Future' },
+    { id:'love',    icon:'❤️', label:'Love & Marriage' },
+    { id:'career',  icon:'💼', label:'Career & Finance' },
+    { id:'health',  icon:'🧘', label:'Health' },
+  ]},
+  { label:'Horoscopes', tabs:[
+    { id:'daily',   icon:'☀️', label:'Today' },
+    { id:'weekly',  icon:'📆', label:'This Week' },
+    { id:'monthly', icon:'🗓️', label:'This Month' },
+    { id:'yearly',  icon:'🌌', label:'2025-26' },
+  ]},
+  { label:'Guidance', tabs:[
+    { id:'dosdonts',     icon:'✅', label:"Dos & Don'ts" },
+    { id:'compatibility',icon:'💑', label:'Compatibility' },
+  ]},
+];
+
+const R_LABELS = {
+  en:{ past:'Karmic & past life reading', present:'Current cosmic weather', future:'Your path ahead (2026–2030)', love:'Love, romance & marriage', career:'Career, purpose & finance', health:'Health & wellness', daily:"Today's horoscope", weekly:'This week', monthly:'This month', yearly:'2025–2026 yearly forecast', dosdonts:"Dos & don'ts for your chart", compatibility:'Marriage compatibility' },
+  kn:{ past:'ಕರ್ಮ ಮತ್ತು ಹಿಂದಿನ ಜನ್ಮ', present:'ವರ್ತಮಾನ ಸ್ಥಿತಿ', future:'ಭವಿಷ್ಯದ ದಾರಿ', love:'ಪ್ರೀತಿ ಮತ್ತು ವಿವಾಹ', career:'ವೃತ್ತಿ ಮತ್ತು ಧನ', health:'ಆರೋಗ್ಯ', daily:'ಇಂದಿನ ಭವಿಷ್ಯ', weekly:'ಈ ವಾರ', monthly:'ಈ ತಿಂಗಳು', yearly:'ವಾರ್ಷಿಕ ಭವಿಷ್ಯ', dosdonts:'ಏನು ಮಾಡಬೇಕು ಏನು ಬೇಡ', compatibility:'ವಿವಾಹ ಹೊಂದಾಣಿಕೆ' },
+  hi:{ past:'कर्म और पूर्व जन्म', present:'वर्तमान स्थिति', future:'भविष्य की राह', love:'प्रेम और विवाह', career:'कैरियर और धन', health:'स्वास्थ्य', daily:'आज का राशिफल', weekly:'इस सप्ताह', monthly:'इस माह', yearly:'वार्षिक भविष्यफल', dosdonts:'क्या करें क्या न करें', compatibility:'विवाह योग्यता' },
+  te:{ past:'కర్మ మరియు పూర్వ జన్మ', present:'వర్తమాన స్థితి', future:'భవిష్యత్ మార్గం', love:'ప్రేమ మరియు వివాహం', career:'వృత్తి మరియు ధనం', health:'ఆరోగ్యం', daily:'నేటి జాతకం', weekly:'ఈ వారం', monthly:'ఈ నెల', yearly:'వార్షిక జాతకం', dosdonts:'చేయవలసినవి వద్దనవి', compatibility:'వివాహ అనుకూలత' },
+  ta:{ past:'கர்மா மற்றும் முன் ஜன்மம்', present:'நடப்பு நிலை', future:'எதிர்கால பாதை', love:'காதல் மற்றும் திருமணம்', career:'தொழில் மற்றும் செல்வம்', health:'உடல் நலம்', daily:'இன்றைய ராசிபலன்', weekly:'இந்த வாரம்', monthly:'இந்த மாதம்', yearly:'வருட பலன்', dosdonts:'செய்வது வேண்டாதவை', compatibility:'திருமண பொருத்தம்' },
+};
+
+const LOAD_MSGS = {
+  en:{ past:'Tracing karmic echoes…', present:'Reading your present sky…', future:'Scanning celestial trajectories…', love:'Aligning Venus and your heart…', career:'Consulting your Saturn path…', health:'Balancing your cosmic constitution…', daily:'Reading today\'s stars…', weekly:'Mapping this week\'s energies…', monthly:'Charting the month ahead…', yearly:'Viewing the year\'s cosmic map…', dosdonts:'Consulting your chart wisdom…', compatibility:'Analysing cosmic compatibility…' },
+  kn:{ past:'ಕರ್ಮದ ಹೆಜ್ಜೆ ಹಿಂಬಾಲಿಸುತ್ತಿದ್ದೇವೆ…', present:'ನಿಮ್ಮ ಆಕಾಶ ಓದುತ್ತಿದ್ದೇವೆ…', future:'ಭವಿಷ್ಯ ಅಳೆಯುತ್ತಿದ್ದೇವೆ…', love:'ಶುಕ್ರ ಜೋಡಿಸುತ್ತಿದ್ದೇವೆ…', career:'ಶನಿ ಮಾರ್ಗ ನೋಡುತ್ತಿದ್ದೇವೆ…', health:'ಆರೋಗ್ಯ ವಿಶ್ಲೇಷಿಸುತ್ತಿದ್ದೇವೆ…', daily:'ಇಂದಿನ ನಕ್ಷತ್ರ ಓದುತ್ತಿದ್ದೇವೆ…', weekly:'ವಾರದ ಶಕ್ತಿ ನೋಡುತ್ತಿದ್ದೇವೆ…', monthly:'ತಿಂಗಳ ನಕ್ಷೆ ಬಿಡಿಸುತ್ತಿದ್ದೇವೆ…', yearly:'ವಾರ್ಷಿಕ ನಕ್ಷೆ ನೋಡುತ್ತಿದ್ದೇವೆ…', dosdonts:'ಜ್ಞಾನ ಸಂಗ್ರಹಿಸುತ್ತಿದ್ದೇವೆ…', compatibility:'ಹೊಂದಾಣಿಕೆ ವಿಶ್ಲೇಷಿಸುತ್ತಿದ್ದೇವೆ…' },
+  hi:{ past:'कर्म के निशान खोज रहे हैं…', present:'वर्तमान आकाश पढ़ रहे हैं…', future:'भविष्य देख रहे हैं…', love:'शुक्र जोड़ रहे हैं…', career:'शनि पथ देख रहे हैं…', health:'स्वास्थ्य विश्लेषण हो रहा है…', daily:'आज के तारे पढ़ रहे हैं…', weekly:'सप्ताह की ऊर्जा देख रहे हैं…', monthly:'माह का नक्शा बना रहे हैं…', yearly:'वार्षिक नक्शा देख रहे हैं…', dosdonts:'ज्ञान एकत्र हो रहा है…', compatibility:'योग्यता विश्लेषण हो रहा है…' },
+  te:{ past:'కర్మ చిహ్నాలు వెతుకుతున్నాం…', present:'ప్రస్తుత ఆకాశం చదువుతున్నాం…', future:'భవిష్యత్ చూస్తున్నాం…', love:'శుక్రుడు కలుపుతున్నాం…', career:'శని మార్గం చూస్తున్నాం…', health:'ఆరోగ్య విశ్లేషణ చేస్తున్నాం…', daily:'నేటి నక్షత్రాలు చదువుతున్నాం…', weekly:'వారపు శక్తి చూస్తున్నాం…', monthly:'నెల నక్షే వేస్తున్నాం…', yearly:'వార్షిక నక్షే చూస్తున్నాం…', dosdonts:'జ్ఞానం సేకరిస్తున్నాం…', compatibility:'అనుకూలత విశ్లేషిస్తున్నాం…' },
+  ta:{ past:'கர்ம தடயங்களை தேடுகிறோம்…', present:'வானம் படிக்கிறோம்…', future:'எதிர்காலம் பார்க்கிறோம்…', love:'சுக்ரன் இணைக்கிறோம்…', career:'சனி பாதை பார்க்கிறோம்…', health:'உடல்நலம் ஆய்வு செய்கிறோம்…', daily:'இன்றைய நட்சத்திரம் படிக்கிறோம்…', weekly:'இந்த வார சக்தி பார்க்கிறோம்…', monthly:'மாத நக்ஷே தயாரிக்கிறோம்…', yearly:'வருட நகஷா பார்க்கிறோம்…', dosdonts:'ஞானம் சேகரிக்கிறோம்…', compatibility:'பொருத்தம் ஆய்வு செய்கிறோம்…' },
+};
+
+function renderTabs() {
+  const wrap = document.getElementById('tabsWrap');
+  wrap.innerHTML = '';
+  TAB_GROUPS.forEach(group => {
+    const lbl = document.createElement('span');
+    lbl.className = 'tab-group-label'; lbl.textContent = group.label;
+    wrap.appendChild(lbl);
+    group.tabs.forEach(t => {
+      const btn = document.createElement('button');
+      btn.className = 'tab-btn' + (t.id === 'past' ? ' on' : '');
+      btn.dataset.tab = t.id;
+      btn.innerHTML = `${t.icon} ${t.label}`;
+      btn.onclick = () => switchTab(t.id, btn);
+      wrap.appendChild(btn);
+    });
+  });
+}
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  activeTab = tab;
+  if (cache[tab + LANG]) showCached(tab);
+  else loadTab(tab);
+}
+
+/* ═══════════════════════════════════════════
+   LOAD READING
+═══════════════════════════════════════════ */
+async function loadTab(tab) {
+  activeTab = tab;
+  const msgs = LOAD_MSGS[LANG] || LOAD_MSGS.en;
+  document.getElementById('readingContent').innerHTML = `
+    <div class="reading-card">
+      <div class="loading-state">
+        <div class="cosmos-loader">
+          <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+        </div>
+        <div class="load-text">${msgs[tab] || 'Reading the stars…'}</div>
+      </div>
+    </div>`;
+
+  try {
+    const res = await fetch('/api/reading', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tab, lang: LANG, chartData }),
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || `Server error ${res.status}`);
+    cache[tab + LANG] = data.text;
+    if (activeTab === tab) showCached(tab);
+  } catch (e) {
+    if (activeTab === tab)
+      document.getElementById('readingContent').innerHTML =
+        `<div class="err-box">⚠ ${e.message || 'Could not load reading. Please try again.'}</div>`;
+  }
+}
+
+function showCached(tab) {
+  const rl    = (R_LABELS[LANG] || R_LABELS.en)[tab] || tab;
+  const text  = cache[tab + LANG];
+  const paras = text.split(/\n+/).filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
+  document.getElementById('readingContent').innerHTML = `
+    <div class="reading-card">
+      <div class="r-label">${rl}</div>
+      <div class="r-text">${paras}</div>
+    </div>`;
+}
+</script>
+</body>
+</html>
