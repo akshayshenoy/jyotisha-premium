@@ -1,10 +1,12 @@
 {
-  "name": "jyotisha-premium",
-  "version": "2.0.0",
-  "type": "module"
-  "description": "Jyotisha Premium — AI Astrology by Akshay Shenoy",
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.27.0"
+  "name": "jyotisha-astro",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev"
   },
-  "engines": { "node": ">=18" }
+  "dependencies": {
+    "razorpay": "^2.9.4"
+  }
 }
