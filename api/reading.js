@@ -1,6 +1,7 @@
 // api/reading.js — Jyotisha Premium AI Reading
-const GEMINI_MODEL = 'gemini-2.0-flash';
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+import Anthropic from '@anthropic-ai/sdk';
+
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const LANG_INSTR = {
   en: 'Write in warm, flowing English.',
@@ -74,8 +75,8 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  if (!process.env.GEMINI_API_KEY) {
-    return res.status(500).json({ error: 'Server not configured. Add GEMINI_API_KEY in Vercel environment variables.' });
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return res.status(500).json({ error: 'Server not configured. Add ANTHROPIC_API_KEY in Vercel environment variables.' });
   }
 
   let body;
@@ -91,28 +92,16 @@ export default async function handler(req, res) {
   try {
     const { system, prompt } = buildPrompt(tab, chartData, lang || 'en');
 
-    const gRes = await fetch(`${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: system }] },
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 1200, temperature: 1 },
-      }),
+    const message = await client.messages.create({
+      model: 'claude-fable-5',
+      max_tokens: 1200,
+      system,
+      messages: [{ role: 'user', content: prompt }],
     });
 
-    const gData = await gRes.json();
-
-    if (!gRes.ok) {
-      const msg = gData?.error?.message || `Gemini error ${gRes.status}`;
-      if (gRes.status === 400 || gRes.status === 401 || gRes.status === 403)
-        return res.status(401).json({ error: 'Invalid API key. Check Vercel environment variables.' });
-      if (gRes.status === 429) return res.status(429).json({ error: 'Rate limit reached. Please wait a moment and try again.' });
-      return res.status(gRes.status).json({ error: msg });
-    }
-
-    const text = (gData.candidates?.[0]?.content?.parts || [])
-      .map(p => p.text || '')
+    const text = message.content
+      .filter(b => b.type === 'text')
+      .map(b => b.text)
       .join('')
       .trim();
 
@@ -121,7 +110,10 @@ export default async function handler(req, res) {
     return res.status(200).json({ text });
 
   } catch (err) {
-    console.error('Gemini error:', err);
+    console.error('Anthropic error:', err);
+    if (err.status === 401) return res.status(401).json({ error: 'Invalid API key. Check Vercel environment variables.' });
+    if (err.status === 429) return res.status(429).json({ error: 'Rate limit reached. Please wait a moment and try again.' });
+    if (err.status === 529) return res.status(503).json({ error: 'AI overloaded. Please try again in a few seconds.' });
     return res.status(500).json({ error: err.message || 'AI reading failed' });
   }
 }
