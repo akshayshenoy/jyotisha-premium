@@ -93,7 +93,7 @@ export default async function handler(req, res) {
     const { system, prompt } = buildPrompt(tab, chartData, lang || 'en');
 
     const message = await client.messages.create({
-      model: 'claude-fable-5',
+      model: 'claude-sonnet-4-6',
       max_tokens: 1200,
       system,
       messages: [{ role: 'user', content: prompt }],
