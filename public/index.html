@@ -627,6 +627,7 @@ let LANG      = 'en';
 let chartData = null;
 let activeTab = 'past';
 const cache   = {};
+let isLoading = false;
 
 function setLang(l, btn) {
   LANG = l;
@@ -822,6 +823,7 @@ function renderTabs() {
 }
 
 function switchTab(tab, el) {
+  if (isLoading) return;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
   el.classList.add('on');
   activeTab = tab;
@@ -829,11 +831,49 @@ function switchTab(tab, el) {
   else loadTab(tab);
 }
 
+function setTabsDisabled(disabled) {
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.disabled = disabled;
+    b.style.opacity = disabled ? '0.5' : '';
+    b.style.pointerEvents = disabled ? 'none' : '';
+  });
+}
+
+/* ── Persistent cache (localStorage) — survives refresh, cuts repeat API calls ── */
+const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+function lsKey(tab) {
+  const c = chartData || {};
+  return 'jyotisha:' + [c.name, c.sunSign, c.moonSign, c.rising, c.nakshatra, tab, LANG].join('|');
+}
+
+function readPersistedCache(tab) {
+  try {
+    const raw = localStorage.getItem(lsKey(tab));
+    if (!raw) return null;
+    const { text, ts } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL_MS) { localStorage.removeItem(lsKey(tab)); return null; }
+    return text;
+  } catch { return null; }
+}
+
+function writePersistedCache(tab, text) {
+  try { localStorage.setItem(lsKey(tab), JSON.stringify({ text, ts: Date.now() })); } catch {}
+}
+
 /* ═══════════════════════════════════════════
    LOAD READING
 ═══════════════════════════════════════════ */
 async function loadTab(tab) {
   activeTab = tab;
+
+  const persisted = readPersistedCache(tab);
+  if (persisted) {
+    cache[tab + LANG] = persisted;
+    showCached(tab);
+    return;
+  }
+
   const msgs = LOAD_MSGS[LANG] || LOAD_MSGS.en;
   document.getElementById('readingContent').innerHTML = `
     <div class="reading-card">
@@ -845,6 +885,9 @@ async function loadTab(tab) {
       </div>
     </div>`;
 
+  isLoading = true;
+  setTabsDisabled(true);
+
   try {
     const res = await fetch('/api/reading', {
       method: 'POST',
@@ -854,11 +897,15 @@ async function loadTab(tab) {
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(data.error || `Server error ${res.status}`);
     cache[tab + LANG] = data.text;
+    writePersistedCache(tab, data.text);
     if (activeTab === tab) showCached(tab);
   } catch (e) {
     if (activeTab === tab)
       document.getElementById('readingContent').innerHTML =
         `<div class="err-box">⚠ ${e.message || 'Could not load reading. Please try again.'}</div>`;
+  } finally {
+    isLoading = false;
+    setTabsDisabled(false);
   }
 }
 
